@@ -1,15 +1,23 @@
 /*
  * ***** BEGIN LICENSE BLOCK *****
  * Zimbra Collaboration Suite Zimlets
- * Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 Zimbra Software, LLC.
- * 
- * The contents of this file are subject to the Zimbra Public License
- * Version 1.4 ("License"); you may not use this file except in
- * compliance with the License.  You may obtain a copy of the License at
- * http://www.zimbra.com/license.
- * 
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2016 Synacor, Inc.
+ *
+ * The contents of this file are subject to the Common Public Attribution License Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at: https://www.zimbra.com/license
+ * The License is based on the Mozilla Public License Version 1.1 but Sections 14 and 15
+ * have been added to cover use of software over a computer network and provide for limited attribution
+ * for the Original Developer. In addition, Exhibit A has been modified to be consistent with Exhibit B.
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * See the License for the specific language governing rights and limitations under the License.
+ * The Original Code is Zimbra Open Source Web Client.
+ * The Initial Developer of the Original Code is Zimbra, Inc.  All rights to the Original Code were
+ * transferred by Zimbra, Inc. to Synacor, Inc. on September 14, 2015.
+ *
+ * All portions of the code are Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2016 Synacor, Inc. All Rights Reserved.
  * ***** END LICENSE BLOCK *****
  */
 
@@ -32,10 +40,7 @@ Com_Zimbra_SForce.SFORCE_MAIL = "SFORCE_MAIL_TB_BTN";
 Com_Zimbra_SForce.SFORCE_CONTACT_TB_BTN = "SFORCE_CONTACT_TB_BTN";
 
 Com_Zimbra_SForce.prototype.init = function() {
-	this.LOGIN_SERVER = this.getUserProperty("sforce_logindlg_apiURL");
-	if(!this.LOGIN_SERVER || this.LOGIN_SERVER == "") {
-		this.LOGIN_SERVER = this.getConfig("SF_API_URL");
-	}
+	this.LOGIN_SERVER = "https://login.salesforce.com/services/Soap/c/52.0"
 	this.SERVER = this.LOGIN_SERVER;
 	this.XMLNS = "urn:enterprise.soap.sforce.com";
 	this._shell = this.getShell();
@@ -484,9 +489,6 @@ function() {	//show the checkbox checked if needed
 	if (this.sforce_ignoreDomainsList) {
 		document.getElementById("sforce_logindlg_ignoreDomainsfield").value = this.sforce_ignoreDomainsList;
 	}
-	if(this.LOGIN_SERVER) {
-		document.getElementById("sforce_logindlg_apiURL").value = this.LOGIN_SERVER;
-	}
 	if (this.loginToSFOnLaunch) {
 		document.getElementById("sforce_logindlg_loginToSFOnLaunch").checked = true;
 	}
@@ -507,7 +509,6 @@ function() {
 	html[i++] = "<TABLE class='SForce_table'  width='100%'><TR><TD style='font-weight:bold'>Salesforce User Name:</TD><TD><INPUT type='text' id='sforce_logindlg_userNamefield' /></TD></TR>";
 	html[i++] = "<TR><TD  style='font-weight:bold'>Password + SecurityToken*:</TD><TD><INPUT type='password' id='sforce_logindlg_passwordfield' /></TD></TR>";
 	html[i++] = "<TR><TD style='font-weight:bold'>Ignore emails with following domain(s):<br/><label style=\"font-size: 10px; color: gray;\">(Separate multiple domains by comma)</label></TD><TD><INPUT type='text' id='sforce_logindlg_ignoreDomainsfield' /></TD></TR>";
-	html[i++] = "<TR><TD style='font-weight:bold'>Salesforce API URL:</TD><TD><INPUT type='text' id='sforce_logindlg_apiURL' /></TD></TR>";
 
 	html[i++] = "</TABLE></DIV><BR/>";
 	html[i++] = "<DIV>";
@@ -537,8 +538,7 @@ function() {
 	var needRefresh = false;
 	var user = AjxStringUtil.trim(document.getElementById("sforce_logindlg_userNamefield").value);
 	var passwd = AjxStringUtil.trim(document.getElementById("sforce_logindlg_passwordfield").value);
-	var sfApiUrl =  AjxStringUtil.trim(document.getElementById("sforce_logindlg_apiURL").value);
-	if (user == "" || passwd == "" || sfApiUrl == "") {
+	if (user == "" || passwd == "") {
 		this._setErrorMsgToLoginDlg("Please fill your Salesforce credentials");
 		return;
 	}
@@ -546,7 +546,6 @@ function() {
 	var loginToSFOnLaunch = document.getElementById("sforce_logindlg_loginToSFOnLaunch").checked;
 	this.sforce_logindlg_sbarShowOnlyOnResult = document.getElementById("sforce_logindlg_sbarShowOnlyOnResult").checked;
 	var showSendandAddBtnVal = document.getElementById("sforce_logindlg_showSendAndAddBtn").checked;
-	this.SERVER = sfApiUrl;
 	if (showSendandAddBtnVal != this.sforce_logindlg_showSendAndAddBtn) {
 		needRefresh = true;
 		this.sforce_logindlg_showSendAndAddBtn = showSendandAddBtnVal;
@@ -562,7 +561,6 @@ function() {
 	this.setUserProperty("sforce_logindlg_sbarShowOnlyOnResult", this.sforce_logindlg_sbarShowOnlyOnResult);
 	this.setUserProperty("sforce_logindlg_showSendAndAddBtn", this.sforce_logindlg_showSendAndAddBtn);
 	this.setUserProperty("loginToSFOnLaunch", loginToSFOnLaunch);
-	this.setUserProperty("sforce_logindlg_apiURL", this.SERVER);
 	var callback = new AjxCallback(this, this._handleSaveProperties, needRefresh);
 
 	this.saveUserProperties(callback);

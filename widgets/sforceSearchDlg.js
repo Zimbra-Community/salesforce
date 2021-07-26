@@ -1,3 +1,25 @@
+/*
+ * ***** BEGIN LICENSE BLOCK *****
+ * Zimbra Collaboration Suite Zimlets
+ * Copyright (C) 2010, 2014, 2015, 2016 Synacor, Inc.
+ *
+ * The contents of this file are subject to the Common Public Attribution License Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at: https://www.zimbra.com/license
+ * The License is based on the Mozilla Public License Version 1.1 but Sections 14 and 15
+ * have been added to cover use of software over a computer network and provide for limited attribution
+ * for the Original Developer. In addition, Exhibit A has been modified to be consistent with Exhibit B.
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied.
+ * See the License for the specific language governing rights and limitations under the License.
+ * The Original Code is Zimbra Open Source Web Client.
+ * The Initial Developer of the Original Code is Zimbra, Inc.  All rights to the Original Code were
+ * transferred by Zimbra, Inc. to Synacor, Inc. on September 14, 2015.
+ *
+ * All portions of the code are Copyright (C) 2010, 2014, 2015, 2016 Synacor, Inc. All Rights Reserved.
+ * ***** END LICENSE BLOCK *****
+ */
 function Com_Zimbra_SForceSearchDlg(zimlet) {
 	this.zimlet = zimlet;
 	this._shell = this.zimlet.getShell();
@@ -47,27 +69,31 @@ function() {
 Com_Zimbra_SForceSearchDlg.prototype._searchDlgOkBtnListner =
 function() {
 	var someRadioSelected = false;
-	for(var i =0; i < this.searchResultRadioIds.length; i++) {
-		var id = this.searchResultRadioIds[i].id;
-		var name = this.searchResultRadioIds[i].name;
-		if(document.getElementById(id).checked) {
-			someRadioSelected = true;
-			if(this.updateSelectMenu) {
-				this._updateSelectmenu(name, id);
-				break;
-			} else {
-				document.getElementById(this.targetDivId).innerHTML =  name;
-				this.resultObjId = id;//store id in resultObjId variable
-				document.getElementById(this.targetDivId).refObjIdValue = id;//set custom parameter
-				document.getElementById(this.clearLinkId).style.display = "block";
-				break;
+	var targetDiv = document.getElementById(this.targetDivId);
+	if(this.searchResultRadioIds && this.searchResultRadioIds.length){
+		for(var i =0; i < this.searchResultRadioIds.length; i++) {
+			var id = this.searchResultRadioIds[i].id;
+			var name = this.searchResultRadioIds[i].name;
+			if(document.getElementById(id).checked) {
+				someRadioSelected = true;
+				if(this.updateSelectMenu) {
+					this._updateSelectmenu(name, id);
+					break;
+				} else {
+					targetDiv.innerHTML =  name;
+					this.resultObjId = id;//store id in resultObjId variable
+					targetDiv.refObjIdValue = id;//set custom parameter
+					document.getElementById(this.clearLinkId).style.display = "block";
+					break;
+				}
 			}
 		}
 	}
-	if(!someRadioSelected) {
-		document.getElementById(this.targetDivId).innerHTML =  "";
+	
+	if(!someRadioSelected && targetDiv) {
+		targetDiv.innerHTML =  "";
 		this.resultObjId = "";//store id in resultObjId variable
-		document.getElementById(this.targetDivId).refObjIdValue = "";//set custom parameter
+		targetDiv.refObjIdValue = "";//set custom parameter
 		document.getElementById(this.clearLinkId).style.display = "none";
 	}	
 	this.updateSelectMenu = false;//reset
